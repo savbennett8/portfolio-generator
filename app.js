@@ -1,15 +1,21 @@
+const fs = require('fs');
+//imports data from the required relative location
+const generatePage = require('./src/page-template.js');
+
+//array which holds the user command line arguments
 const profileDataArgs = process.argv.slice(2, process.argv.length);
-console.log(profileDataArgs);
 
-const printProfileData = profileDataArr => {
-    for (let i = 0; i < profileDataArr.length; i++) {
-        console.log(profileDataArr[i]);
-    }
+//extract & store those arguments using assignment destructuring
+const [name, github] = profileDataArgs;
 
-    console.log('==============');
 
-    profileDataArr.forEach(profileItem => console.log(profileItem));
+//alternatively written using the array index:
+//const name = profileDataArgs[0];
+//const github = profileDataArgs[1];
 
-};
 
-printProfileData(profileDataArgs);
+fs.writeFile('index.html', generatePage(name, github), err => {
+    if (err) throw err;
+
+    console.log('Portfolio complete! Check out the index.html to see the output!');
+});
