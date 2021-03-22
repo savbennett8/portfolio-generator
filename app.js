@@ -1,4 +1,9 @@
+//requires inquierer from npm
 const inquirer = require('inquirer');
+//requires file system from node
+const fs = require('fs');
+//imports data from the required relative location
+const generatePage = require('./src/page-template.js');
 
 const promptUser = () => {
     return inquirer.prompt([
@@ -134,15 +139,16 @@ const promptProject = portfolioData => {
 promptUser()
     .then(promptProject)
     .then(portfolioData => {
-        console.log(portfolioData);
+        const pageHTML = generatePage(portfolioData);
+
+        fs.writeFile('./index.html', pageHTML, err => {
+            if (err) throw new Error(err);
+
+            console.log('Page created! Check out index.html in this directory to see it!');
+        });
     });
 
 // ----------------------need this later but not now -----------------//
-
-// //requires file system from node
-// const fs = require('fs');
-// //imports data from the required relative location
-// const generatePage = require('./src/page-template.js');
 
 // const pageHTML = generatePage(name, github);
 
