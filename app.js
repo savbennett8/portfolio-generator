@@ -1,7 +1,7 @@
 //requires inquierer from npm
 const inquirer = require('inquirer');
-//requires file system from node
-const fs = require('fs');
+//imports data from the required relative location
+const { writeFile, copyFile } = require('./utils/generate-site.js');
 //imports data from the required relative location
 const generatePage = require('./src/page-template.js');
 
@@ -139,16 +139,41 @@ const promptProject = portfolioData => {
 promptUser()
     .then(promptProject)
     .then(portfolioData => {
-        const pageHTML = generatePage(portfolioData);
-
-        fs.writeFile('./index.html', pageHTML, err => {
-            if (err) throw new Error(err);
-
-            console.log('Page created! Check out index.html in this directory to see it!');
-        });
+        return generatePage(portfolioData);
+    })
+    .then(pageHTML => {
+        return writeFile(pageHTML);
+    })
+    .then(writeFileResponse => {
+        console.log(writeFileResponse);
+        return copyFile();
+    })
+    .then(copyFileResponse => {
+        console.log(copyFileResponse);
+    })
+    .catch(err => {
+        console.log(err);
     });
 
-// ----------------------need this later but not now -----------------//
+
+
+// ---------------------- changed all this somewhere up above -----------------//
+
+// fs.writeFile('./dist/index.html', pageHTML, err => {
+//     if (err) {
+//         console.log(err);
+//         return;
+//     }
+//     console.log('Page created! Check out index.html in this directory to see it!');
+
+//     fs.copyFile('./src/style.css', './dist/style.css', err => {
+//         if (err) {
+//             console.log(err);
+//             return;
+//         }
+//         console.log('Style sheet copied successfully!');
+//     });
+// });
 
 // const pageHTML = generatePage(name, github);
 
